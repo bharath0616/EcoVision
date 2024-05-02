@@ -1,0 +1,6 @@
+train: ../train/images
+val: ../valid/images
+
+nc: 12
+
+names: ['banana','banana2','bread','beefCan','coke','fruit','mango','meat','peppers','strawberry','tins','tomatoes']
