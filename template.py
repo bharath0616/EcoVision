@@ -1,55 +1,351 @@
-import os
-from pathlib import Path
-import logging
+<!DOCTYPE html>
+<html lang="en">
 
-logging.basicConfig(level=logging.INFO, format='[%(asctime)s]: %(message)s')
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Web App</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<style>
 
-project_name='EcoVision'
+		.iupload h3 {
+			color: #1b2d6b;
+			font-size: 30px;
+			font-weight: 700;
+		}
 
-list_of_files = [
-    ".github/workflows/.gitkeep",
-    "data/.gitkeep",
-    f"{project_name}/__init__.py",
-    f"{project_name}/components/__init__.py",
-    f"{project_name}/components/data_ingestion.py",
-    f"{project_name}/components/data_validation.py",
-    f"{project_name}/components/model_trainer.py",
-    f"{project_name}/constant/__init__.py",
-    f"{project_name}/constant/training_pipeline/__init__.py",
-    f"{project_name}/constant/application.py",
-    f"{project_name}/entity/config_entity.py",
-    f"{project_name}/entity/artifacts_entity.py",
-    f"{project_name}/exception/__init__.py",
-    f"{project_name}/logger/__init__.py",
-    f"{project_name}/pipeline/__init__.py",
-    f"{project_name}/pipeline/training_pipeline.py",
-    f"{project_name}/utils/__init__.py",
-    f"{project_name}/utils/main_utils.py",
-    "reseach/trials.ipynb",
-    "templates/index.html",
-    "app.py",
-    "Dockerfile",
-    "requirements.txt",
-    "setup.py",
-]
+		.img-part-1 {
+			height: 300px;
+			width: 300px;
+			margin: 0px auto;
+		}
+
+		.image-part {
+			height: 300px;
+			width: 300px;
+			border: 1px solid #1b2d6b;
+		}
+
+		.image-part img {
+			/* position: absolute; */
+			height: 300px;
+			width: 300px;
+			display: none;
+			padding: 5px;
+		}
+
+		.image-part #video {
+			/* display: block; */
+			height: 300px;
+			width: 300px;
+			padding: 5px;
+		}
+
+		.res-part {
+			/* margin-left: 20px; */
+			height: 400px;
+			width: 100%;
+			padding: 5px;
+			margin: 0px auto;
+			overflow: auto;
+		}
+
+		.upload-image {
+			/* margin-left: 20px; */
+			height: 400px;
+			width: auto;;
+			padding: 5px;
+			margin: 0px auto;
+			overflow: auto;
+		}
+
+		.resp-img {
+			height: 400px;
+			width: auto;
+			margin: 0px auto;
+		}
+
+		.jsonRes {
+			margin-left: 30px;
+		}
+
+		#send {
+			cursor: pointer;
+		}
+
+		.btn-part {
+			width: 325px;
+		}
+
+		textarea,
+		select,
+		.form-control,
+		.custom-select,
+		button.btn,
+		.btn-primary,
+		input[type="text"],
+		input[type="url"],
+		.uneditable-input {
+			border: 1px solid #363e75;
+			outline: 0 !important;
+			border-radius: 0px;
+			box-shadow: none;
+			-webkit-box-shadow: none;
+			-moz-box-shadow: none;
+			-moz-transition: none;
+			-webkit-transition: none;
+		}
+
+		textarea:focus,
+		select:focus,
+		.form-control:focus,
+		.btn:focus,
+		.btn-primary:focus,
+		.custom-select:focus,
+		input[type="text"]:focus,
+		.uneditable-input:focus {
+			border: 1px solid #007bff;
+			outline: 0 !important;
+			border-radius: 0px;
+			box-shadow: none;
+			-webkit-box-shadow: none;
+			-moz-box-shadow: none;
+			-moz-transition: none;
+			-webkit-transition: none;
+		}
+
+		#loading {
+			position: fixed;
+			left: 0px;
+			top: 0px;
+			width: 100%;
+			height: 100%;
+			z-index: 9999999999;
+			overflow: hidden;
+			background: rgba(255, 255, 255, 0.7);
+		}
+
+		.loader {
+			border: 8px solid #f3f3f3;
+			border-top: 8px solid #363e75;
+			border-radius: 50%;
+			width: 60px;
+			height: 60px;
+			left: 50%;
+			margin-left: -4em;
+			display: block;
+			animation: spin 2s linear infinite;
+		}
+
+		.loader,
+		.loader:after {
+			display: block;
+			position: absolute;
+			top: 50%;
+			margin-top: -4.05em;
+		}
+
+		@keyframes spin {
+			0% {
+				transform: rotate(0deg);
+			}
+
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+
+		.logo {
+			position: absolute;
+			right: 0px;
+			bottom: 0px;
+			margin-right: 30px;
+			margin-bottom: 30px;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- <div class="main container">
+		<section class="iupload">
+			<h3 class="text-center py-4">Object Detection Using TFOD</h3>
+			<div class="row">
+				<div class="img-part col-md-6">
+					<div class="image-part">
+						<video autoplay id="video"
+							poster="https://img.freepik.com/free-vector/group-young-people-posing-photo_52683-18824.jpg?size=338&ext=jpg"></video>
+						<img src="" id="photo">
+						<canvas style="display:none;" id="canvas"></canvas>
+					</div>
+				</div>
+				<div class="col-md-6 col-xs-12 right-part">
+					<h5 class="mb-2">
+						Prediction Results
+					</h5>
+					<div class="row">
+						<div class="res-part2 col-md-2 col-xs-12"></div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		
+	</div> -->
+
+	<!-- Header -->
+<header class="bg-primary text-center py-5 mb-4">
+	<div class="container">
+	  <h1 class="font-weight-light text-white">Waste Detection using YOLOv5</h1>
+	</div>
+  </header>
+  
+  <!-- Page Content -->
+  <div class="container">
+
+	  
+	<form class="input-group upload-data row">	
+		<div class="col-xl-6 col-md-6 col-sm-6">
+		<button type="button" class="btn btn-primary col-12" id="uload">Upload</button>
+		</div>
+		<div class="col-xl-6 col-md-6 col-sm-6">
+			<button id="send" type="button" class="btn btn-success col-12">Predict</button>
+		</div>
+
+		<!-- change url value  -->
+
+		<input type="hidden" class="form-control mr-2" id="url" placeholder="Enter REST Api url..." value="../predict" />
+		<input name="upload" type="file" id="fileinput" style="position:absolute;top:-500px; display: none;" /><br />
+	</form>
+
+	<div class="row">
+	  <!-- Team Member 1 -->
+	  <div class="col-xl-6 col-md-6 col-sm-6 mb-6">
+		<div class="card border-0 shadow upload-image ">
+		  <!-- <img src="https://source.unsplash.com/TMgQMXoglsM/500x350" class="card-img-top" alt="..."> -->
+		  	<video autoplay id="video" poster="https://img.freepik.com/free-vector/group-young-people-posing-photo_52683-18824.jpg?size=338&ext=jpg"></video>
+			<img src="" class="" id="photo">
+			<canvas style="display:none;" id="canvas"></canvas>
+		  <!-- <div class="card-body text-center">
+			<h5 class="card-title mb-0">Team Member</h5>
+		  </div> -->
+		</div>
+	  </div>
+	  <!-- Team Member 2 -->
+	  <div class="col-xl-6 col-md-6 col-sm-6 mb-6">
+		<div class="card border-0 shadow res-part2">
+		  <div class="card-body text-center">
+			<h5 class="card-title mb-0">Prediction Results</h5>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<!-- /.row -->
+
+  
+  </div>
+  <!-- /.container -->
+
+	<img class="logo" src="http://  "
+		src="https://apparel.ineuronvision.com/static/logo.png" />
 
 
-for filepath in list_of_files:
-    filepath = Path(filepath) # Path() converts any file path directory format to, it will
-    #automatically convert the path into default windows path.  
+	<div id="loading">
+		<div class="loader"></div>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+	</script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+	</script>
 
-    filedir, filename = os.path.split(filepath)
+	<script>
+		var mybtn = document.getElementById('startbtn');
+		var myvideo = document.getElementById('video');
+		var mycanvas = document.getElementById('canvas');
+		var myphoto = document.getElementById('photo');
+		var base_data = "";
 
-    if filedir!="":
-        os.makedirs(filedir,exist_ok=True)
-        logging.info(f"Creating directory: {filedir} for the file {filename}")
+		function sendRequest(base64Data) {
+			var type = "json";
+			if (base64Data != "" || base64Data != null) {
+				if (type == "imgtobase") {
+					$(".res-part").html("");
+					$(".res-part").html(base64Data);
+				} else if (type == "basetoimg") {
+					var imageData = $("#imgstring").val();
+					$(".res-part").html("");
+					$(".res-part").append("<img src='data:image/jpeg;base64," + imageData + "' alt='' />");
+				} else {
+					var url = $("#url").val();
+					$("#loading").show();
+					$.ajax({
+						url: url,
+						type: "post",
+						cache: false,
+						async: true,
+						crossDomain: true,
+						headers: {
+							'Content-Type': 'application/json',
+							'Access-Control-Allow-Origin': '*'
+						},
+						data: JSON.stringify({
+							image: base64Data
+						}),
+						success: function (res) {
+							$(".res-part").html("");
+							$(".res-part2").html("");
+							var imageData = res.image;
+							$(".res-part2").append("<img class='resp-img' src='data:image/jpeg;base64," +
+								imageData + "' alt='' />");
+							// $(".res-part").html("<pre>" + JSON.stringify(res[0], undefined, 2) + "</pre>");
+							$("#loading").hide();
+						}
+					});
+				}
+			}
+		}
 
-    
-    if(not os.path.exists(filename)) or (os.path.getsize(filename) == 0):
-        with open(filepath, "w") as f:
-            pass
-            logging.info(f"Creating empty file: {filename}")
+		$(document).ready(function () {
+			$("#loading").hide();
 
-    
-    else:
-        logging.info(f"{filename} is already created")
+			$('#send').click(function (evt) {
+				sendRequest(base_data);
+			});
+
+			$('#uload').click(function (evt) {
+				$('#fileinput').focus().trigger('click');
+			});
+			$("#fileinput").change(function () {
+				if (this.files && this.files[0]) {
+					var reader = new FileReader();
+					reader.onload = function (e) {
+						var url = e.target.result;
+						var img = new Image();
+						img.crossOrigin = 'Anonymous';
+						img.onload = function () {
+							var canvas = document.createElement('CANVAS');
+							var ctx = canvas.getContext('2d');
+							canvas.height = this.height;
+							canvas.width = this.width;
+							ctx.drawImage(this, 0, 0);
+							base_data = canvas.toDataURL('image/jpeg', 1.0).replace(
+								/^data:image.+;base64,/, '');
+							canvas = null;
+						};
+						img.src = url;
+						$('#photo').attr('src', url);
+						$('#photo').show();
+						$('#video').hide();
+					}
+					reader.readAsDataURL(this.files[0]);
+				}
+			});
+		});
+	</script>
+</body>
+
+</html>
