@@ -6,11 +6,6 @@ from EcoVision.entity.config_entity import DataValidationConfig
 from EcoVision.entity.artifacts_entity import (DataIngestionArtifact,
                                                  DataValidationArtifact)
 
-
-
-
-
-
 class DataValidation:
     def __init__(
         self,
@@ -71,4 +66,3 @@ class DataValidation:
 
         except Exception as e:
             raise AppException(e, sys)
-        
